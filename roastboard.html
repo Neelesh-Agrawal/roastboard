@@ -1,0 +1,417 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .rb-wrap {
+    font-family: 'Inter', sans-serif;
+    background: #0a0a0a;
+    color: #e8e8e0;
+    min-height: 600px;
+    padding: 2rem 1.5rem;
+  }
+
+  .rb-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .rb-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: #e8e8e0;
+    letter-spacing: -0.5px;
+  }
+
+  .rb-day {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+
+  .rb-mode-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .rb-mode-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border: 1px solid #2a2a2a;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-radius: 2px;
+  }
+
+  .rb-mode-btn:hover { border-color: #444; color: #aaa; }
+  .rb-mode-btn.active { border-color: #e8e8e0; color: #e8e8e0; background: #111; }
+
+  .rb-mode-btn[data-mode="brutal"].active { border-color: #c0392b; color: #e74c3c; }
+
+  .rb-input-area {
+    width: 100%;
+    background: #111;
+    border: 1px solid #1e1e1e;
+    color: #e8e8e0;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 14px 16px;
+    resize: vertical;
+    min-height: 110px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .rb-input-area:focus { border-color: #333; }
+  .rb-input-area::placeholder { color: #3a3a3a; }
+
+  .rb-submit {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 10px 24px;
+    background: #e8e8e0;
+    color: #0a0a0a;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: opacity 0.15s;
+    font-weight: 700;
+  }
+
+  .rb-submit:hover { opacity: 0.85; }
+  .rb-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .rb-divider {
+    height: 1px;
+    background: #1a1a1a;
+    margin: 2rem 0;
+  }
+
+  .rb-output { display: none; }
+  .rb-output.visible { display: block; }
+
+  .rb-verdict-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .rb-verdict-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: #e8e8e0;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .rb-categories {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .rb-cat {
+    background: #111;
+    border: 1px solid #1e1e1e;
+    border-radius: 2px;
+    padding: 14px 16px;
+  }
+
+  .rb-cat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .rb-cat-score {
+    font-family: 'Space Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .rb-cat-note {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  .score-good { color: #27ae60; }
+  .score-mid { color: #f39c12; }
+  .score-bad { color: #c0392b; }
+
+  .rb-senior-section {
+    background: #0f0f0f;
+    border: 1px solid #1a1a1a;
+    border-left: 3px solid #333;
+    padding: 16px 18px;
+    margin-bottom: 2rem;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .rb-senior-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .rb-senior-text {
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.7;
+  }
+
+  .rb-loading {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2rem;
+  }
+
+  .rb-loading.visible { display: flex; }
+
+  .rb-dots {
+    display: flex;
+    gap: 5px;
+  }
+
+  .rb-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: #444;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+
+  .rb-dot:nth-child(2) { animation-delay: 0.2s; }
+  .rb-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes pulse {
+    0%, 80%, 100% { background: #333; }
+    40% { background: #aaa; }
+  }
+
+  .rb-loading-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 0.5px;
+  }
+
+  .rb-mode-brutal .rb-senior-section { border-left-color: #c0392b; }
+  .rb-mode-brutal .rb-verdict-text { color: #e74c3c; }
+
+  .rb-error {
+    display: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: #c0392b;
+    margin-top: 1rem;
+  }
+
+  .rb-error.visible { display: block; }
+</style>
+
+<div class="rb-wrap" id="roastboard">
+  <h2 class="sr-only">Roastboard — AI design critique tool for Ship69 Day 54</h2>
+
+  <div class="rb-header">
+    <span class="rb-logo">Roastboard</span>
+    <span class="rb-day">SHIP69 / DAY 54</span>
+  </div>
+
+  <div class="rb-mode-row" role="group" aria-label="Critique mode">
+    <button class="rb-mode-btn active" data-mode="gentle" onclick="setMode('gentle')">Gentle</button>
+    <button class="rb-mode-btn" data-mode="direct" onclick="setMode('direct')">Direct</button>
+    <button class="rb-mode-btn" data-mode="brutal" onclick="setMode('brutal')">Brutal</button>
+  </div>
+
+  <textarea
+    class="rb-input-area"
+    id="designInput"
+    placeholder="Describe your design. Be specific — layout, typeface, palette, spacing decisions, what it's trying to do, who it's for. Or paste a Figma link and describe what you see."
+  ></textarea>
+
+  <button class="rb-submit" id="submitBtn" onclick="runCritique()">Roast it →</button>
+
+  <div class="rb-loading" id="loading">
+    <div class="rb-dots">
+      <div class="rb-dot"></div>
+      <div class="rb-dot"></div>
+      <div class="rb-dot"></div>
+    </div>
+    <span class="rb-loading-text" id="loadingText">Reading your design...</span>
+  </div>
+
+  <div class="rb-error" id="errorMsg"></div>
+
+  <div class="rb-divider" id="divider" style="display:none"></div>
+
+  <div class="rb-output" id="output">
+    <div class="rb-verdict-label">Verdict</div>
+    <div class="rb-verdict-text" id="verdictText"></div>
+
+    <div class="rb-categories" id="categoriesGrid"></div>
+
+    <div class="rb-senior-section" id="seniorSection">
+      <div class="rb-senior-label" id="seniorLabel">SENIOR DESIGNER SAYS</div>
+      <div class="rb-senior-text" id="seniorText"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentMode = 'gentle';
+
+const loadingMessages = [
+  'Reading your design...',
+  'Checking the kerning...',
+  'Counting the orphaned pixels...',
+  'Consulting the grid gods...',
+  'Measuring your margins...',
+];
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.rb-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  const wrap = document.getElementById('roastboard');
+  wrap.className = 'rb-wrap rb-mode-' + mode;
+}
+
+function scoreClass(n) {
+  if (n >= 7) return 'score-good';
+  if (n >= 4) return 'score-mid';
+  return 'score-bad';
+}
+
+async function runCritique() {
+  const input = document.getElementById('designInput').value.trim();
+  if (!input) return;
+
+  const btn = document.getElementById('submitBtn');
+  const loading = document.getElementById('loading');
+  const loadingText = document.getElementById('loadingText');
+  const output = document.getElementById('output');
+  const errorMsg = document.getElementById('errorMsg');
+  const divider = document.getElementById('divider');
+
+  btn.disabled = true;
+  output.classList.remove('visible');
+  errorMsg.classList.remove('visible');
+  divider.style.display = 'none';
+  loading.classList.add('visible');
+
+  let msgIdx = 0;
+  const msgInterval = setInterval(() => {
+    msgIdx = (msgIdx + 1) % loadingMessages.length;
+    loadingText.textContent = loadingMessages[msgIdx];
+  }, 1800);
+
+  const modePrompts = {
+    gentle: 'You are a kind, encouraging senior designer doing a design review. Be constructive and warm but genuinely honest.',
+    direct: 'You are a design lead giving a direct, professional code review. No fluff, just honest assessment.',
+    brutal: 'You are a principal designer who has zero patience for sloppy design decisions. You are brutally, hilariously honest. You call out every mistake without mercy but are always factually correct.'
+  };
+
+  const systemPrompt = `${modePrompts[currentMode]}
+
+You output ONLY a JSON object, no markdown, no preamble, with this exact shape:
+{
+  "verdict": "One punchy sentence summarising the design overall. No more than 20 words.",
+  "spacing": { "score": 7, "note": "One sentence, prose, no bullet points." },
+  "typography": { "score": 5, "note": "One sentence, prose, no bullet points." },
+  "colour": { "score": 8, "note": "One sentence, prose, no bullet points." },
+  "hierarchy": { "score": 6, "note": "One sentence, prose, no bullet points." },
+  "consistency": { "score": 4, "note": "One sentence, prose, no bullet points." },
+  "seniorTake": "Two to three sentences of the senior designer's overall narrative take. Prose only, no bullets. End with one actionable thing to fix first."
+}
+
+Scores are out of 10. Be genuinely discriminating — most designs should not score above 7 in every category. Do not use bullet points anywhere in any field.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: input }]
+      })
+    });
+
+    const data = await res.json();
+    const rawText = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = rawText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    clearInterval(msgInterval);
+    loading.classList.remove('visible');
+
+    document.getElementById('verdictText').textContent = parsed.verdict;
+
+    const cats = [
+      { key: 'spacing', label: 'Spacing' },
+      { key: 'typography', label: 'Typography' },
+      { key: 'colour', label: 'Colour' },
+      { key: 'hierarchy', label: 'Hierarchy' },
+      { key: 'consistency', label: 'Consistency' },
+    ];
+
+    const grid = document.getElementById('categoriesGrid');
+    grid.innerHTML = cats.map(c => {
+      const s = parsed[c.key];
+      return `<div class="rb-cat">
+        <div class="rb-cat-label">${c.label}</div>
+        <div class="rb-cat-score ${scoreClass(s.score)}">${s.score}<span style="font-size:14px;color:#444">/10</span></div>
+        <div class="rb-cat-note">${s.note}</div>
+      </div>`;
+    }).join('');
+
+    const labelMap = {
+      gentle: 'SENIOR DESIGNER SAYS',
+      direct: 'DESIGN LEAD SAYS',
+      brutal: 'PRINCIPAL SAYS (brace yourself)'
+    };
+
+    document.getElementById('seniorLabel').textContent = labelMap[currentMode];
+    document.getElementById('seniorText').textContent = parsed.seniorTake;
+
+    divider.style.display = 'block';
+    output.classList.add('visible');
+    btn.disabled = false;
+
+  } catch (err) {
+    clearInterval(msgInterval);
+    loading.classList.remove('visible');
+    errorMsg.textContent = 'Something went wrong. Check your API connection and try again.';
+    errorMsg.classList.add('visible');
+    btn.disabled = false;
+  }
+}
+</script>
