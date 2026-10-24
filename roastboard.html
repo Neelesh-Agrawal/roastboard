@@ -1,417 +1,182 @@
-
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Roastboard · Honest AI design critique</title>
+<meta name="description" content="Upload a screenshot or describe your design and get a scored critique on spacing, typography, colour, hierarchy and consistency, gentle, direct or brutal.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500&display=swap');
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  .rb-wrap {
-    font-family: 'Inter', sans-serif;
-    background: #0a0a0a;
-    color: #e8e8e0;
-    min-height: 600px;
-    padding: 2rem 1.5rem;
-  }
-
-  .rb-header {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 2rem;
-  }
-
-  .rb-logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    color: #e8e8e0;
-    letter-spacing: -0.5px;
-  }
-
-  .rb-day {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: #555;
-    letter-spacing: 1px;
-  }
-
-  .rb-mode-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 1.5rem;
-  }
-
-  .rb-mode-btn {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    padding: 6px 14px;
-    border: 1px solid #2a2a2a;
-    background: transparent;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.15s;
-    border-radius: 2px;
-  }
-
-  .rb-mode-btn:hover { border-color: #444; color: #aaa; }
-  .rb-mode-btn.active { border-color: #e8e8e0; color: #e8e8e0; background: #111; }
-
-  .rb-mode-btn[data-mode="brutal"].active { border-color: #c0392b; color: #e74c3c; }
-
-  .rb-input-area {
-    width: 100%;
-    background: #111;
-    border: 1px solid #1e1e1e;
-    color: #e8e8e0;
-    font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    line-height: 1.6;
-    padding: 14px 16px;
-    resize: vertical;
-    min-height: 110px;
-    border-radius: 2px;
-    margin-bottom: 12px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .rb-input-area:focus { border-color: #333; }
-  .rb-input-area::placeholder { color: #3a3a3a; }
-
-  .rb-submit {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    padding: 10px 24px;
-    background: #e8e8e0;
-    color: #0a0a0a;
-    border: none;
-    cursor: pointer;
-    border-radius: 2px;
-    transition: opacity 0.15s;
-    font-weight: 700;
-  }
-
-  .rb-submit:hover { opacity: 0.85; }
-  .rb-submit:disabled { opacity: 0.3; cursor: not-allowed; }
-
-  .rb-divider {
-    height: 1px;
-    background: #1a1a1a;
-    margin: 2rem 0;
-  }
-
-  .rb-output { display: none; }
-  .rb-output.visible { display: block; }
-
-  .rb-verdict-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #555;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-
-  .rb-verdict-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 22px;
-    font-weight: 500;
-    line-height: 1.4;
-    color: #e8e8e0;
-    margin-bottom: 2rem;
-    padding-bottom: 2rem;
-    border-bottom: 1px solid #1a1a1a;
-  }
-
-  .rb-categories {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 2rem;
-  }
-
-  .rb-cat {
-    background: #111;
-    border: 1px solid #1e1e1e;
-    border-radius: 2px;
-    padding: 14px 16px;
-  }
-
-  .rb-cat-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: #555;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .rb-cat-score {
-    font-family: 'Space Mono', monospace;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-
-  .rb-cat-note {
-    font-size: 12px;
-    color: #888;
-    line-height: 1.5;
-  }
-
-  .score-good { color: #27ae60; }
-  .score-mid { color: #f39c12; }
-  .score-bad { color: #c0392b; }
-
-  .rb-senior-section {
-    background: #0f0f0f;
-    border: 1px solid #1a1a1a;
-    border-left: 3px solid #333;
-    padding: 16px 18px;
-    margin-bottom: 2rem;
-    border-radius: 0 2px 2px 0;
-  }
-
-  .rb-senior-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 1.5px;
-    color: #555;
-    margin-bottom: 10px;
-  }
-
-  .rb-senior-text {
-    font-size: 14px;
-    color: #bbb;
-    line-height: 1.7;
-  }
-
-  .rb-loading {
-    display: none;
-    align-items: center;
-    gap: 10px;
-    margin-top: 2rem;
-  }
-
-  .rb-loading.visible { display: flex; }
-
-  .rb-dots {
-    display: flex;
-    gap: 5px;
-  }
-
-  .rb-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: #444;
-    animation: pulse 1.2s ease-in-out infinite;
-  }
-
-  .rb-dot:nth-child(2) { animation-delay: 0.2s; }
-  .rb-dot:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes pulse {
-    0%, 80%, 100% { background: #333; }
-    40% { background: #aaa; }
-  }
-
-  .rb-loading-text {
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: #555;
-    letter-spacing: 0.5px;
-  }
-
-  .rb-mode-brutal .rb-senior-section { border-left-color: #c0392b; }
-  .rb-mode-brutal .rb-verdict-text { color: #e74c3c; }
-
-  .rb-error {
-    display: none;
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
-    color: #c0392b;
-    margin-top: 1rem;
-  }
-
-  .rb-error.visible { display: block; }
+:root{--bg:#0f0d0c;--panel:#181513;--panel2:#201c19;--ink:#f6efe7;--muted:#a69a8e;--line:#2d2723;--fire:#ff5a1f;--fire2:#ffb020;--good:#4ade80;--mid:#facc15;--bad:#f87171;--mono:'JetBrains Mono',ui-monospace,monospace}
+*{box-sizing:border-box;margin:0}
+body{font:15px/1.55 Inter,system-ui,sans-serif;background:radial-gradient(60% 40% at 50% -10%,rgba(255,90,31,.18),transparent),var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:980px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:1.1rem}
+.brand i{font-style:normal;font-size:1.3rem}
+header a{color:var(--muted);font-size:.8rem;text-decoration:none}
+.hero{padding:26px 0 24px;text-align:center}
+.hero h1{font-size:clamp(2.1rem,5.5vw,3.6rem);line-height:1;letter-spacing:-.045em;font-weight:800}
+.hero h1 span{background:linear-gradient(90deg,var(--fire),var(--fire2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:52ch;margin:14px auto 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:20px}
+.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.modes button{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:12px;text-align:left}
+.modes button b{display:block;font-size:.95rem}
+.modes button span{font-size:.76rem;color:var(--muted)}
+.modes button[aria-pressed=true]{border-color:var(--fire);box-shadow:0 0 0 1px var(--fire) inset;background:rgba(255,90,31,.08)}
+.inputs{display:grid;grid-template-columns:260px 1fr;gap:14px}
+.drop{border:1.5px dashed var(--line);border-radius:14px;min-height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:14px;color:var(--muted);font-size:.84rem;cursor:pointer;position:relative;overflow:hidden;transition:border-color .2s}
+.drop:hover,.drop.over{border-color:var(--fire);color:var(--ink)}
+.drop b{color:var(--ink)}
+.drop img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.drop .x{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;z-index:2;display:none}
+.drop.has .x{display:block}
+textarea{width:100%;min-height:200px;resize:vertical;border:1px solid var(--line);border-radius:14px;background:var(--panel2);padding:14px;font-size:.92rem;line-height:1.55}
+textarea:focus,.modes button:focus-visible,.go:focus-visible{outline:2px solid var(--fire2);outline-offset:2px}
+.examples{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.examples button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:5px 11px;font-size:.76rem;color:var(--muted)}
+.examples button:hover{color:var(--ink);border-color:var(--muted)}
+.go{margin-top:16px;width:100%;padding:15px;border:0;border-radius:14px;background:linear-gradient(90deg,var(--fire),var(--fire2));color:#1a0d05;font-weight:800;font-size:1rem;transition:transform .15s,opacity .2s}
+.go:hover{transform:translateY(-1px)}
+.go:disabled{opacity:.55;cursor:wait;transform:none}
+.status{margin-top:14px;text-align:center;color:var(--muted);font-size:.88rem;min-height:1.4em}
+.status.err{color:var(--bad)}
+.result{display:none;margin-top:24px}
+.result.on{display:block;animation:rise .5s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}}
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+.ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--v)*1%),var(--panel2) 0);position:relative}
+.ring::before{content:'';position:absolute;inset:9px;border-radius:50%;background:var(--panel)}
+.ring b{position:relative;font-size:2rem;font-weight:800;letter-spacing:-.04em}
+.ring b small{font-size:.9rem;color:var(--muted);font-weight:600}
+.verdict h2{font-size:clamp(1.3rem,3vw,1.8rem);letter-spacing:-.03em;line-height:1.2}
+.verdict .label{font:600 .7rem var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--fire2);margin-bottom:8px}
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:18px}
+.cat{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:14px}
+.cat-h{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:.9rem}
+.cat-h b{font-size:1.3rem}
+.bar{height:6px;border-radius:999px;background:var(--line);margin:8px 0 10px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:var(--c);width:0;transition:width .8s ease}
+.cat p{font-size:.84rem;color:var(--muted)}
+.fix{margin-top:14px;padding:16px;border-radius:14px;background:rgba(255,90,31,.1);border:1px solid rgba(255,90,31,.35)}
+.fix .label,.take .label{font:600 .7rem var(--mono);text-transform:uppercase;letter-spacing:.12em;color:var(--fire2);margin-bottom:6px}
+.take{margin-top:14px;padding:16px;border-radius:14px;background:var(--panel2);border:1px solid var(--line)}
+.actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end;flex-wrap:wrap}
+.actions button{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:9px 14px;font-weight:600;font-size:.85rem}
+footer{color:var(--muted);font-size:.8rem;padding:40px 0;text-align:center}
+footer a{color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (max-width:720px){.inputs{grid-template-columns:1fr}.drop{min-height:150px}.modes button span{display:none}.verdict{grid-template-columns:1fr;justify-items:center;text-align:center}}
 </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="brand"><i aria-hidden="true">🔥</i>Roastboard</div><a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">A Ship69 tool by Neelesh ↗</a></header>
 
-<div class="rb-wrap" id="roastboard">
-  <h2 class="sr-only">Roastboard — AI design critique tool for Ship69 Day 54</h2>
-
-  <div class="rb-header">
-    <span class="rb-logo">Roastboard</span>
-    <span class="rb-day">SHIP69 / DAY 54</span>
+  <div class="hero">
+    <h1>Get your design <span>roasted.</span></h1>
+    <p>Upload a screenshot, add a line about what it is for, and get a scored critique on spacing, typography, colour, hierarchy and consistency.</p>
   </div>
 
-  <div class="rb-mode-row" role="group" aria-label="Critique mode">
-    <button class="rb-mode-btn active" data-mode="gentle" onclick="setMode('gentle')">Gentle</button>
-    <button class="rb-mode-btn" data-mode="direct" onclick="setMode('direct')">Direct</button>
-    <button class="rb-mode-btn" data-mode="brutal" onclick="setMode('brutal')">Brutal</button>
-  </div>
-
-  <textarea
-    class="rb-input-area"
-    id="designInput"
-    placeholder="Describe your design. Be specific — layout, typeface, palette, spacing decisions, what it's trying to do, who it's for. Or paste a Figma link and describe what you see."
-  ></textarea>
-
-  <button class="rb-submit" id="submitBtn" onclick="runCritique()">Roast it →</button>
-
-  <div class="rb-loading" id="loading">
-    <div class="rb-dots">
-      <div class="rb-dot"></div>
-      <div class="rb-dot"></div>
-      <div class="rb-dot"></div>
+  <div class="card">
+    <div class="modes" role="group" aria-label="Critique tone">
+      <button data-mode="gentle" aria-pressed="false"><b>Gentle</b><span>Kind senior designer</span></button>
+      <button data-mode="direct" aria-pressed="true"><b>Direct</b><span>Honest design lead</span></button>
+      <button data-mode="brutal" aria-pressed="false"><b>Brutal</b><span>No mercy, still fair</span></button>
     </div>
-    <span class="rb-loading-text" id="loadingText">Reading your design...</span>
+    <div class="inputs">
+      <label class="drop" id="drop"><b>Add a screenshot</b>Drop, paste or tap to choose<br><small>Optional, but critiques are far better with one</small><input type="file" id="file" accept="image/*" class="sr"><button class="x" id="clear" type="button" aria-label="Remove screenshot">×</button></label>
+      <div>
+        <label for="desc" class="sr">Describe the design</label>
+        <textarea id="desc" placeholder="What is it, who is it for, and what should it make people do? e.g. Landing page for a budgeting app aimed at students. Goal: sign-ups. Inter for type, green accent, lots of whitespace."></textarea>
+        <div class="examples" aria-label="Examples"><button data-ex="Mobile onboarding screen for a meditation app. Three illustrated steps, a big Continue button, skip link at the top right. Pastel purple palette, rounded type.">Onboarding screen</button><button data-ex="SaaS pricing page with three tiers. Middle tier highlighted. Twelve feature rows per tier, small grey text, a monthly/yearly toggle above the cards.">Pricing page</button><button data-ex="Dashboard home for a fitness studio admin. Sidebar with 14 items, four KPI cards, a revenue chart and a table of today's classes. Blue and grey.">Admin dashboard</button></div>
+      </div>
+    </div>
+    <button class="go" id="go">Roast it 🔥</button>
+    <div class="status" id="status" role="status" aria-live="polite"></div>
   </div>
 
-  <div class="rb-error" id="errorMsg"></div>
-
-  <div class="rb-divider" id="divider" style="display:none"></div>
-
-  <div class="rb-output" id="output">
-    <div class="rb-verdict-label">Verdict</div>
-    <div class="rb-verdict-text" id="verdictText"></div>
-
-    <div class="rb-categories" id="categoriesGrid"></div>
-
-    <div class="rb-senior-section" id="seniorSection">
-      <div class="rb-senior-label" id="seniorLabel">SENIOR DESIGNER SAYS</div>
-      <div class="rb-senior-text" id="seniorText"></div>
+  <div class="result" id="result">
+    <div class="card">
+      <div class="verdict"><div class="ring" id="ring"><b id="overall">0<small>/10</small></b></div><div><div class="label" id="who">Design lead says</div><h2 id="verdict"></h2></div></div>
+      <div class="cats" id="cats"></div>
+      <div class="fix"><div class="label">Fix this first</div><p id="fix"></p></div>
+      <div class="take"><div class="label">The full take</div><p id="take"></p></div>
+      <div class="actions"><button id="copy">Copy critique</button><button id="again">Roast another</button></div>
     </div>
   </div>
+
+  <footer>Made during Ship69, rebuilt Oct 2026 · <a href="https://neeleshagrawal.vercel.app" target="_blank" rel="noopener">neeleshagrawal.vercel.app</a></footer>
 </div>
-
 <script>
-let currentMode = 'gentle';
+const $ = s => document.querySelector(s);
+let mode = 'direct', image = null, last = null;
+const WHO = { gentle: 'Senior designer says', direct: 'Design lead says', brutal: 'Principal designer says (brace yourself)' };
+const LOADING = ['Reading your design…', 'Checking the kerning…', 'Measuring your margins…', 'Squinting at the hierarchy…', 'Consulting the grid…'];
+const colour = n => n >= 7 ? 'var(--good)' : n >= 4 ? 'var(--mid)' : 'var(--bad)';
 
-const loadingMessages = [
-  'Reading your design...',
-  'Checking the kerning...',
-  'Counting the orphaned pixels...',
-  'Consulting the grid gods...',
-  'Measuring your margins...',
-];
+document.querySelectorAll('.modes button').forEach(b => b.addEventListener('click', () => { mode = b.dataset.mode; document.querySelectorAll('.modes button').forEach(x => x.setAttribute('aria-pressed', x === b)); }));
+document.querySelectorAll('.examples button').forEach(b => b.addEventListener('click', () => { $('#desc').value = b.dataset.ex; $('#desc').focus(); }));
 
-function setMode(mode) {
-  currentMode = mode;
-  document.querySelectorAll('.rb-mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
-  const wrap = document.getElementById('roastboard');
-  wrap.className = 'rb-wrap rb-mode-' + mode;
-}
-
-function scoreClass(n) {
-  if (n >= 7) return 'score-good';
-  if (n >= 4) return 'score-mid';
-  return 'score-bad';
-}
-
-async function runCritique() {
-  const input = document.getElementById('designInput').value.trim();
-  if (!input) return;
-
-  const btn = document.getElementById('submitBtn');
-  const loading = document.getElementById('loading');
-  const loadingText = document.getElementById('loadingText');
-  const output = document.getElementById('output');
-  const errorMsg = document.getElementById('errorMsg');
-  const divider = document.getElementById('divider');
-
-  btn.disabled = true;
-  output.classList.remove('visible');
-  errorMsg.classList.remove('visible');
-  divider.style.display = 'none';
-  loading.classList.add('visible');
-
-  let msgIdx = 0;
-  const msgInterval = setInterval(() => {
-    msgIdx = (msgIdx + 1) % loadingMessages.length;
-    loadingText.textContent = loadingMessages[msgIdx];
-  }, 1800);
-
-  const modePrompts = {
-    gentle: 'You are a kind, encouraging senior designer doing a design review. Be constructive and warm but genuinely honest.',
-    direct: 'You are a design lead giving a direct, professional code review. No fluff, just honest assessment.',
-    brutal: 'You are a principal designer who has zero patience for sloppy design decisions. You are brutally, hilariously honest. You call out every mistake without mercy but are always factually correct.'
+// Shrink screenshots before upload so requests stay small and fast.
+function loadImage(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const img = new Image();
+  img.onload = () => {
+    const max = 1400, k = Math.min(1, max / Math.max(img.width, img.height));
+    const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+    image = c.toDataURL('image/jpeg', 0.82);
+    const d = $('#drop'); d.classList.add('has'); d.querySelector('img')?.remove(); const p = new Image(); p.src = image; p.alt = 'Screenshot to critique'; d.prepend(p);
   };
-
-  const systemPrompt = `${modePrompts[currentMode]}
-
-You output ONLY a JSON object, no markdown, no preamble, with this exact shape:
-{
-  "verdict": "One punchy sentence summarising the design overall. No more than 20 words.",
-  "spacing": { "score": 7, "note": "One sentence, prose, no bullet points." },
-  "typography": { "score": 5, "note": "One sentence, prose, no bullet points." },
-  "colour": { "score": 8, "note": "One sentence, prose, no bullet points." },
-  "hierarchy": { "score": 6, "note": "One sentence, prose, no bullet points." },
-  "consistency": { "score": 4, "note": "One sentence, prose, no bullet points." },
-  "seniorTake": "Two to three sentences of the senior designer's overall narrative take. Prose only, no bullets. End with one actionable thing to fix first."
+  img.src = URL.createObjectURL(file);
 }
+$('#file').addEventListener('change', e => loadImage(e.target.files[0]));
+$('#clear').addEventListener('click', e => { e.preventDefault(); image = null; $('#drop').classList.remove('has'); $('#drop img')?.remove(); $('#file').value = ''; });
+['dragenter', 'dragover'].forEach(t => $('#drop').addEventListener(t, e => { e.preventDefault(); $('#drop').classList.add('over'); }));
+['dragleave', 'drop'].forEach(t => $('#drop').addEventListener(t, e => { e.preventDefault(); $('#drop').classList.remove('over'); }));
+$('#drop').addEventListener('drop', e => loadImage(e.dataTransfer.files[0]));
+document.addEventListener('paste', e => { const it = [...(e.clipboardData?.items || [])].find(i => i.type.startsWith('image/')); if (it) loadImage(it.getAsFile()); });
 
-Scores are out of 10. Be genuinely discriminating — most designs should not score above 7 in every category. Do not use bullet points anywhere in any field.`;
-
+function setStatus(msg, err) { const s = $('#status'); s.textContent = msg; s.classList.toggle('err', !!err); }
+$('#go').addEventListener('click', async () => {
+  const description = $('#desc').value.trim();
+  if (!description && !image) return setStatus('Add a screenshot or describe the design first.', true);
+  const btn = $('#go'); btn.disabled = true; $('#result').classList.remove('on');
+  let i = 0; setStatus(LOADING[0]); const t = setInterval(() => setStatus(LOADING[++i % LOADING.length]), 1600);
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: input }]
-      })
-    });
+    const r = await fetch('/api/roast', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ mode, description, image }) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error === 'not_configured' ? 'The AI is not connected on this deployment yet. Please try again later.' : data.error === 'rate_limited' ? 'Too many roasts right now. Give it a minute and try again.' : (data.error && data.error.length < 120 && !data.error.includes('_') ? data.error : 'The critique could not be generated. Please try again.'));
+    show(data); setStatus('');
+  } catch (e) { setStatus(e.message || 'Something went wrong. Please try again.', true); }
+  finally { clearInterval(t); btn.disabled = false; }
+});
 
-    const data = await res.json();
-    const rawText = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-    const clean = rawText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-
-    clearInterval(msgInterval);
-    loading.classList.remove('visible');
-
-    document.getElementById('verdictText').textContent = parsed.verdict;
-
-    const cats = [
-      { key: 'spacing', label: 'Spacing' },
-      { key: 'typography', label: 'Typography' },
-      { key: 'colour', label: 'Colour' },
-      { key: 'hierarchy', label: 'Hierarchy' },
-      { key: 'consistency', label: 'Consistency' },
-    ];
-
-    const grid = document.getElementById('categoriesGrid');
-    grid.innerHTML = cats.map(c => {
-      const s = parsed[c.key];
-      return `<div class="rb-cat">
-        <div class="rb-cat-label">${c.label}</div>
-        <div class="rb-cat-score ${scoreClass(s.score)}">${s.score}<span style="font-size:14px;color:#444">/10</span></div>
-        <div class="rb-cat-note">${s.note}</div>
-      </div>`;
-    }).join('');
-
-    const labelMap = {
-      gentle: 'SENIOR DESIGNER SAYS',
-      direct: 'DESIGN LEAD SAYS',
-      brutal: 'PRINCIPAL SAYS (brace yourself)'
-    };
-
-    document.getElementById('seniorLabel').textContent = labelMap[currentMode];
-    document.getElementById('seniorText').textContent = parsed.seniorTake;
-
-    divider.style.display = 'block';
-    output.classList.add('visible');
-    btn.disabled = false;
-
-  } catch (err) {
-    clearInterval(msgInterval);
-    loading.classList.remove('visible');
-    errorMsg.textContent = 'Something went wrong. Check your API connection and try again.';
-    errorMsg.classList.add('visible');
-    btn.disabled = false;
-  }
+function show(d) {
+  last = d;
+  const cats = [['spacing', 'Spacing'], ['typography', 'Typography'], ['colour', 'Colour'], ['hierarchy', 'Hierarchy'], ['consistency', 'Consistency']];
+  const scores = cats.map(([k]) => +d[k]?.score || 0);
+  const overall = Math.round((+d.overall || scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10;
+  $('#ring').style.setProperty('--v', overall * 10); $('#ring').style.setProperty('--c', colour(overall));
+  $('#overall').innerHTML = `${overall}<small>/10</small>`;
+  $('#who').textContent = WHO[mode]; $('#verdict').textContent = d.verdict || '';
+  $('#cats').innerHTML = cats.map(([k, l]) => { const s = +d[k]?.score || 0; return `<div class="cat"><div class="cat-h">${l}<b style="color:${colour(s)}">${s}</b></div><div class="bar"><i style="--c:${colour(s)}" data-w="${s * 10}"></i></div><p>${(d[k]?.note || '').replace(/</g, '&lt;')}</p></div>`; }).join('');
+  $('#fix').textContent = d.fixFirst || ''; $('#take').textContent = d.seniorTake || '';
+  $('#result').classList.add('on');
+  requestAnimationFrame(() => document.querySelectorAll('.bar i').forEach(b => b.style.width = b.dataset.w + '%'));
+  $('#result').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+$('#copy').addEventListener('click', () => {
+  if (!last) return;
+  const lines = [`Roastboard (${mode})`, `Overall: ${$('#overall').textContent}`, `Verdict: ${last.verdict}`, '', ...['spacing', 'typography', 'colour', 'hierarchy', 'consistency'].map(k => `${k[0].toUpperCase() + k.slice(1)}: ${last[k]?.score}/10, ${last[k]?.note}`), '', `Fix first: ${last.fixFirst}`, '', last.seniorTake];
+  navigator.clipboard.writeText(lines.join('\n')).then(() => { $('#copy').textContent = 'Copied ✓'; setTimeout(() => $('#copy').textContent = 'Copy critique', 1500); });
+});
+$('#again').addEventListener('click', () => { $('#result').classList.remove('on'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
 </script>
+</body>
+</html>
